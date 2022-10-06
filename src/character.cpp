@@ -1,10 +1,6 @@
 #include "character.hpp"
 
-// Deprecated
-void Character::move(const sf::Vector2f speed){
-    m_sprite.move(speed);
-}
-
+// Update the Character position and speed according to his acceleration and speed. Only way to move the character !!
 void Character::update(){
     m_position += m_speed;
     m_speed += m_acceleration;
@@ -35,8 +31,12 @@ void Character::setAcceleration(const sf::Vector2f new_acceleration){
     m_acceleration = new_acceleration;
 }
 
-void Character::accelerate(sf::Vector2f acceleration){
-    
+const sf::Vector2f Character::getCharacterForce(){
+    return character_force;
+}
+
+void Character::setCharacterForce(sf::Vector2f force){
+    character_force = force;
 }
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const{
@@ -46,8 +46,10 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 Character::Character(){
     // Initialize base values
     m_health = 100;
-    m_position = sf::Vector2f(64, 7*32);
+    m_position = sf::Vector2f(64, 9*32);
     m_speed = sf::Vector2f(0, 0);
+
+    // Gravity
     m_acceleration = sf::Vector2f(0, 0);
 
 
