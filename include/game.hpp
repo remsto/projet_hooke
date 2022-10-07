@@ -4,21 +4,16 @@
 #include <SFML/Graphics.hpp>
 #include "level.hpp"
 #include "character.hpp"
+#include "engine.hpp"
 
 class Game {
     private:
         float nu;
-        Level level;
-        Character character;
-        TileMap map;
         sf::RenderWindow window;
-        sf::View main_view;
+        Engine m_engine;
 
     public:
-        // Check if the character is airborne
-        bool checkAirborne();
         int runGame();
-        void update();
         void stickGround();
         Game();
 };
