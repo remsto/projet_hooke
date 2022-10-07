@@ -76,7 +76,7 @@ void Game::update(){
 
 void Game::stickGround(){
     sf::Vector2f character_pos = character.getPosition();
-    character.setPosition(sf::Vector2f(character_pos.x, ))
+    character.setPosition(sf::Vector2f(character_pos.x, fmod(character_pos.y, level.getTileSize())));
 }
 
 bool Game::checkAirborne(){
