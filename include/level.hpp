@@ -10,7 +10,7 @@ class Level {
         int m_size_y;
         int m_size_x;
         // Defines the number of pixels of a squared sprite
-        int m_side_size;
+        int m_tile_size;
 
         // Contains all the infos about the elements in the level
         std::vector<std::vector<int>> content_array;
@@ -20,8 +20,8 @@ class Level {
 
     public:
         void printContent() const;
-        std::vector<sf::IntRect> giveContinuousRect();
-        std::vector<std::vector<int>>& getContentArray();
+        const std::vector<std::vector<int>>& getContentArray() const;
+        int getTileSize() const;
 
         Level();
         Level(int id);

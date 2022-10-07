@@ -1,7 +1,11 @@
 #include "character.hpp"
 
-// Update the Character position and speed according to his acceleration and speed. Only way to move the character !!
+// Update the Character position and speed according to his acceleration and speed. 
 void Character::update(){
+    if (!m_airborne){
+        m_speed.y = 0;
+        m_acceleration.y = 0;
+    }
     m_position += m_speed;
     m_speed += m_acceleration;
     m_sprite.setPosition(m_position);
@@ -39,6 +43,20 @@ void Character::setCharacterForce(sf::Vector2f force){
     character_force = force;
 }
 
+const sf::Sprite& Character::getSprite(){
+    return m_sprite;
+}
+
+void Character::setAirborne(bool new_airborne){
+    m_airborne = new_airborne;
+}
+
+bool Character::getAirborne(){
+    return m_airborne;
+}
+
+
+
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(m_sprite);
 }
@@ -46,7 +64,7 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 Character::Character(){
     // Initialize base values
     m_health = 100;
-    m_position = sf::Vector2f(64, 9*32);
+    m_position = sf::Vector2f(64, 14*32);
     m_speed = sf::Vector2f(0, 0);
 
     // Gravity

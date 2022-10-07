@@ -15,8 +15,11 @@ class Game {
         sf::View main_view;
 
     public:
+        // Check if the character is airborne
+        bool checkAirborne();
         int runGame();
         void update();
+        void stickGround();
         Game();
 };
 #endif // __GAME_H__

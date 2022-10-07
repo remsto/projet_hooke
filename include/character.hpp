@@ -8,13 +8,16 @@ class Character : public sf::Drawable {
     private:
         int m_health;
 
+        bool m_airborne;
+
         // Actually a duplicate of the sprite position. Should it be removed ?
         sf::Vector2f m_position;
         sf::Vector2f m_speed;
         sf::Vector2f m_acceleration;
+        sf::Vector2f character_force;
+
         sf::Texture m_texture;
         sf::Sprite m_sprite;
-        sf::Vector2f character_force;
 
     public:
         void update();
@@ -30,6 +33,12 @@ class Character : public sf::Drawable {
 
         const sf::Vector2f getCharacterForce();
         void setCharacterForce(sf::Vector2f force);
+
+        const sf::Sprite& getSprite();
+
+        void setAirborne(bool new_airborne);
+
+        bool getAirborne();
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
         Character();
