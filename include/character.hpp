@@ -5,8 +5,13 @@
 #include "entity.hpp"
 
 class Character : public Entity {
+        
+    private:
+        float m_base_force;
+
 
     public:
+        float getBaseForce() const;
         Character();
         // ~Character();
 };

@@ -3,7 +3,7 @@
 
 
 
-bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, const std::vector<std::vector<int>>& tiles)
+bool TileMap::load(const std::string& tileset, sf::Vector2u tileSize, const std::vector<std::vector<LevelTile>>& tiles)
 {
     // on charge la texture du tileset
     if (!m_tileset.loadFromFile(tileset))

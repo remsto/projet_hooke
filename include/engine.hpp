@@ -26,10 +26,22 @@ class Engine {
         void resetLoopConsts();
 
         // Check if the entity is airborne in the engine level
-        bool checkAirborne(Entity entity) const;
+        bool checkAirborne(const Entity& entity) const;
+
+        // Sticks an entity to the ground
+        void stickGround(Entity& entity) const;
 
         // Handle the keyboard event if it happened
-        void handleEvent(sf::Keyboard::Key key);
+        void handleEvent(sf::Event event);
+
+        // Check if the entity is colliding with a tile of the level
+        bool checkCollision(const Entity& entity) const;
+
+        // Handle the collisions of an entity (not enter in walls)
+        void handleCollision(Entity& entity);
+
+        // Gives the coords of the position in the tile map
+        sf::Vector2i getTilePos(const sf::Vector2f pos) const;
 
         // Gives the character. Should not be modified outside of the engine
         const Character& getCharacter() const;
@@ -41,7 +53,7 @@ class Engine {
 
         Engine();
 
-        Engine(Level level, Character character, sf::View view);
+        Engine(Level& level, Character& character, sf::View& view);
 };
 
 #endif // __ENGINE_HPP__

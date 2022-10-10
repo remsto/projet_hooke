@@ -20,10 +20,11 @@ int Game::runGame()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::KeyPressed){
-                m_engine.handleEvent(event.key.code);
-            }
-            else if (event.type == sf::Event::Closed)
+            // if (event.type == sf::Event::KeyPressed){
+            //     m_engine.handleEvent(event.key.code);
+            // }
+            m_engine.handleEvent(event);
+            if (event.type == sf::Event::Closed)
                 window.close();
         }
 
@@ -48,13 +49,11 @@ int Game::runGame()
 
 
 Game::Game(){
-    // Fluid frottements constant
-    nu = 0.01;
 
     const unsigned int screen_width = sf::VideoMode::getDesktopMode().width;
     const unsigned int screen_height = sf::VideoMode::getDesktopMode().height;
 
-    m_engine = Engine(Level(), *(new Character()), sf::View(sf::FloatRect(0, 5*32, screen_width/2, screen_height/2)));
+    m_engine = Engine(*(new Level()), *(new Character()), *(new sf::View(sf::FloatRect(0, 5*32, screen_width/2, screen_height/2))));
 
     // Window creation
     window.create(sf::VideoMode(screen_width/2, screen_height/2), "Tilemap", sf::Style::Titlebar | sf::Style::Close);

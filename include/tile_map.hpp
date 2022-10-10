@@ -2,12 +2,13 @@
 #define GRAPHICS_HPP
 
 #include <SFML/Graphics.hpp>
+#include "level_tile.hpp"
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {
 public:
 
-    bool load(const std::string& tileset, sf::Vector2u tileSize,const std::vector<std::vector<int>>& tiles);
+    bool load(const std::string& tileset, sf::Vector2u tileSize,const std::vector<std::vector<LevelTile>>& tiles);
 
 private:
 
