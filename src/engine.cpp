@@ -91,9 +91,9 @@ bool Engine::checkCollision(const Entity& entity) const{
     sf::FloatRect entity_rect = entity.getHitbox();
     sf::Vector2f entity_pos = entity.getPosition(); // Also top left corner
     
-    sf::Vector2f top_right(entity_pos.x + entity_rect.width - 1, entity_pos.y);
-    sf::Vector2f low_left(entity_pos.x, entity_pos.y + entity_rect.height - 1);
-    sf::Vector2f low_right(entity_pos.x + entity_rect.width - 1, entity_pos.y + entity_rect.height - 1);
+    sf::Vector2f top_right(entity_pos.x + entity_rect.width , entity_pos.y);
+    sf::Vector2f low_left(entity_pos.x, entity_pos.y + entity_rect.height );
+    sf::Vector2f low_right(entity_pos.x + entity_rect.width , entity_pos.y + entity_rect.height );
     int tile_size = m_level.getTileSize();
     std::vector<std::vector<LevelTile>> level_content = m_level.getContentArray();
 
@@ -109,9 +109,11 @@ bool Engine::checkCollision(const Entity& entity) const{
 void Engine::handleCollision(Entity& entity){
     sf::Vector2f entity_speed = entity.getSpeed();
     float speed_norm = entity_speed.x*entity_speed.x + entity_speed.y*entity_speed.y;
-    sf::Vector2f direction = entity_speed/speed_norm;
-    while (checkCollision(entity)){
-        entity.addPosition(-direction);
+    if (speed_norm != 0){
+        sf::Vector2f direction = entity_speed/speed_norm;
+        while (checkCollision(entity)){
+            entity.addPosition(-direction);
+        }
     }
 
     // for (auto corner : std::vector<sf::Vector2i>( {sf::Vector2i(0, 0), sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(0, 1)} )){
