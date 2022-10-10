@@ -28,7 +28,6 @@ void Engine::updatePhysics(){
     handleCollision(m_character);
     m_character.setSpritePos(m_character.getPosition());
     m_main_view.setCenter(m_character.getPosition());
-    std::cout << "WOUAHAOU  x : " << m_character.getPosition().x << " y : " << m_character.getPosition().y << std::endl;
 
 }
 
@@ -81,7 +80,7 @@ void Engine::handleEvent(sf::Event event){
     if (event.type == sf::Event::KeyPressed){
         if (event.key.code == sf::Keyboard::Space){
              m_character.setAirborne(true);
-            m_character.setVerticalSpeed(-10);
+            m_character.setVerticalSpeed(-m_character.getBaseJump());
         }
     }
 }

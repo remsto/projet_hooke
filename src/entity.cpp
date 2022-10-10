@@ -20,7 +20,6 @@ void Entity::updatePhysics(){
         m_speed.y = -m_max_speed.y;
 
     addPosition(m_speed);
-    std::cout << " x : " << m_hitbox.left << " y : " << m_hitbox.top << std::endl;
 }
 
 sf::FloatRect Entity::getHitbox() const{
