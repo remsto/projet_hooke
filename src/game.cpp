@@ -8,9 +8,6 @@
 
 int Game::runGame()
 {
-    // if (!map.load("assets/cobblestone1.png", sf::Vector2u(32, 32), level.getContentArray()))
-    //     return -1;
-
     // Main loop
     while (window.isOpen())
     {
@@ -20,9 +17,6 @@ int Game::runGame()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            // if (event.type == sf::Event::KeyPressed){
-            //     m_engine.handleEvent(event.key.code);
-            // }
             m_engine.handleEvent(event);
             if (event.type == sf::Event::Closed)
                 window.close();
@@ -41,10 +35,6 @@ int Game::runGame()
 
     return 0;  
 }
-// void Game::stickGround(){
-//     sf::Vector2f character_pos = character.getPosition();
-//     character.setPosition(sf::Vector2f(character_pos.x, fmod(character_pos.y, level.getTileSize())));
-// }
 
 
 

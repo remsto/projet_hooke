@@ -4,10 +4,11 @@
 
 // Update the Entity position and speed according to its acceleration and speed. 
 void Entity::updatePhysics(){
-    if (!m_airborne){
-        m_speed.y = 0;
-        m_acceleration.y = 0;
-    }
+    // if (!m_airborne){
+    //     m_speed.y = 0;
+    //     m_acceleration.y = 0;
+    // }
+    addPosition(m_speed);
     m_speed += m_acceleration;
 
     if (m_speed.x > m_max_speed.x)
@@ -19,7 +20,6 @@ void Entity::updatePhysics(){
     else if (-m_speed.y > m_max_speed.y)
         m_speed.y = -m_max_speed.y;
 
-    addPosition(m_speed);
 }
 
 sf::FloatRect Entity::getHitbox() const{

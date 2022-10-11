@@ -5,6 +5,7 @@
 
 #include "level.hpp"
 #include "character.hpp"
+#include "direction.hpp"
 
 // Physical engine for the game. Should contain the world and the entities 
 class Engine {
@@ -34,8 +35,14 @@ class Engine {
         // Handle the keyboard event if it happened
         void handleEvent(sf::Event event);
 
-        // Check if the entity is colliding with a tile of the level
-        bool checkCollision(const Entity& entity) const;
+        // Check if the entity is right next to a solid object in the directions given
+        bool checkStickCollision(const Entity& entity, unsigned int direction) const;
+
+        // Set the speed in a direction to 0 if there is a wall right next to the entity
+        void handleStickCollision(Entity& entity);
+
+        // Check if the entity is colliding with a tile of the level in the directions given
+        bool checkCollision(const Entity& entity, unsigned int direction) const;
 
         // Handle the collisions of an entity (not enter in walls)
         void handleCollision(Entity& entity);

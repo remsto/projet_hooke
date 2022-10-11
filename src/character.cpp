@@ -16,7 +16,7 @@ Character::Character(){
     m_health = 100;
     m_hitbox = sf::FloatRect(100, 13*32, 32, 32);
     m_speed = sf::Vector2f(0, 0);
-    m_base_force = 8;
+    m_base_force = 1;
     m_base_jump = 15;
 
     // Gravity

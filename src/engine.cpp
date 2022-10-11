@@ -3,28 +3,22 @@
 
 #include "engine.hpp"
 #include "level.hpp"
+#include "direction.hpp"
 
 
 void Engine::updatePhysics(){
 
-    // Tentative of Newton classic physics. For now has not worked well, so more basic stuff is used
-
-    // int x_speed = m_character.getSpeed().x;
-    // int y_speed = m_character.getSpeed().y;
-    // int x_force = m_character.getForce().x;
-    // int y_force = m_character.getForce().y;
-
-    // // Adds the gravity force, the fluid frottements force, and the character force
-    // sf::Vector2f new_acceleration = sf::Vector2f(0 - m_nu*x_speed + x_force, \
-    //                                              1 - m_nu*y_speed + y_force) ;
+    // TODO : Bug when jumping while sticking to a wall : when the upper corner is reached while maintaining the direction toward the wall, 
+    // the character cannot move even if he should be able to
 
     // Simple gravity
-    m_character.setAcceleration(0, 1);
+    m_character.setVerticalAcceleration(1);
+
+    handleStickCollision(m_character);
+    // std::cout << "Acc" << m_character.getAcceleration().x << " " << m_character.getAcceleration().y << std::endl;
+    // std::cout << "Speed" << m_character.getSpeed().x << " " << m_character.getSpeed().y << std::endl;
 
     m_character.updatePhysics();
-    // if (!m_character.getAirborne()){
-    //     stickGround(m_character);
-    // }
     handleCollision(m_character);
     m_character.setSpritePos(m_character.getPosition());
     m_main_view.setCenter(m_character.getPosition());
@@ -59,23 +53,19 @@ void Engine::stickGround(Entity& entity) const{
 }
 
 void Engine::handleEvent(sf::Event event){
-    // if (key == sf::Keyboard::Left){
-    //     m_character.setForce(sf::Vector2f(-m_character.getBaseForce(), 0));
-    // }
-    // else if (key == sf::Keyboard::Right){
-    //     m_character.setForce(sf::Vector2f(m_character.getBaseForce(), 0));
-    // }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-        m_character.setHorizontalSpeed(-m_character.getBaseForce());
+        m_character.setHorizontalAcceleration(-m_character.getBaseForce());
     }
 
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)){
-        m_character.setHorizontalSpeed(m_character.getBaseForce());
+        m_character.setHorizontalAcceleration(m_character.getBaseForce());
     }
 
-    else
+    else{
         m_character.resetHorizontalSpeed();
+        m_character.resetHorizontalAcceleration();
+    }
 
     if (event.type == sf::Event::KeyPressed){
         if (event.key.code == sf::Keyboard::Space){
@@ -85,11 +75,34 @@ void Engine::handleEvent(sf::Event event){
     }
 }
 
-bool Engine::checkCollision(const Entity& entity) const{
+void Engine::handleStickCollision(Entity& entity){
+    sf::Vector2f entity_speed = entity.getSpeed();
+    sf::Vector2f entity_acceleration = entity.getAcceleration();
+    for (auto direction : {sf::Vector2f(-1, 0), sf::Vector2f(0, -1), sf::Vector2f(1, 0), sf::Vector2f(0, 1)}){
+
+        // Check that the entity is moving in the direction
+        if (((direction.x * entity_speed.x) > 0) || ((direction.y * entity_speed.y) > 0)){
+
+            // Move one pixel and check the collision
+            entity.addPosition(direction);
+
+            // Check the collision only in the interesting direction
+            if (checkCollision(entity, ((direction.x < 0) * Direction::Left) | ((direction.y < 0) * Direction::Top) \
+                                        | ((direction.x > 0) * Direction::Right) | ((direction.y > 0) * Direction::Bottom))){
+
+                // Sets the speed to 0 only in the interesting direction
+                entity.setSpeed(entity_speed.x*(!(entity_speed.x * direction.x > 0)), entity_speed.y*(!(entity_speed.y * direction.y > 0)));
+                entity.setAcceleration(entity_acceleration.x*(!((entity_acceleration.x * direction.x) > 0)), entity_acceleration.y*(!((entity_acceleration.y * direction.y) > 0)));
+                                        }
+            entity.addPosition(-direction);
+        }
+    }
+}
+
+bool Engine::checkCollision(const Entity& entity, unsigned int direction = Direction::Left | Direction::Top | Direction::Right | Direction::Bottom) const{
     // Get varaibles
     sf::FloatRect entity_rect = entity.getHitbox();
     sf::Vector2f entity_pos = entity.getPosition(); // Also top left corner
-    
     sf::Vector2f top_right(entity_pos.x + entity_rect.width , entity_pos.y);
     sf::Vector2f low_left(entity_pos.x, entity_pos.y + entity_rect.height );
     sf::Vector2f low_right(entity_pos.x + entity_rect.width , entity_pos.y + entity_rect.height );
@@ -97,12 +110,16 @@ bool Engine::checkCollision(const Entity& entity) const{
     std::vector<std::vector<LevelTile>> level_content = m_level.getContentArray();
 
     // Check if the low corners of the character rect are inside a block
-    LevelTile top_left_value = level_content[static_cast<int>(entity_pos.y) / tile_size][static_cast<int>(entity_pos.x) / tile_size];
-    LevelTile top_right_value = level_content[static_cast<int>(low_right.y) / tile_size][static_cast<int>(low_right.x) / tile_size];
-    LevelTile low_left_value = level_content[static_cast<int>(low_left.y) / tile_size][static_cast<int>(low_left.x) / tile_size];
-    LevelTile low_right_value = level_content[static_cast<int>(low_right.y) / tile_size][static_cast<int>(low_right.x) / tile_size];
+    LevelTile top_left_value = (direction & (Direction::Left | Direction::Top)) ? \
+                                    level_content[static_cast<int>(entity_pos.y) / tile_size][static_cast<int>(entity_pos.x) / tile_size] : LevelTile::Air;
+    LevelTile top_right_value = (direction & (Direction::Right | Direction::Top)) ? \
+                                    level_content[static_cast<int>(low_right.y) / tile_size][static_cast<int>(low_right.x) / tile_size] : LevelTile::Air;
+    LevelTile low_left_value = (direction & (Direction::Bottom | Direction::Left)) ? \
+                                    level_content[static_cast<int>(low_left.y) / tile_size][static_cast<int>(low_left.x) / tile_size] : LevelTile::Air;
+    LevelTile low_right_value = (direction & (Direction::Bottom | Direction::Right)) ? \
+                                    level_content[static_cast<int>(low_right.y) / tile_size][static_cast<int>(low_right.x) / tile_size] : LevelTile::Air;
 
-    return (top_left_value != -1 || top_right_value != -1 || low_left_value != -1 || low_right_value != -1);
+    return (top_left_value != LevelTile::Air || top_right_value != LevelTile::Air || low_left_value != LevelTile::Air || low_right_value != LevelTile::Air);
 }
 
 void Engine::handleCollision(Entity& entity){
@@ -114,40 +131,6 @@ void Engine::handleCollision(Entity& entity){
             entity.addPosition(-direction);
         }
     }
-
-    // for (auto corner : std::vector<sf::Vector2i>( {sf::Vector2i(0, 0), sf::Vector2i(1, 0), sf::Vector2i(1, 1), sf::Vector2i(0, 1)} )){
-    //     sf::Vector2f corner_pos(entity_pos.x + corner.x*entity_rect.width, entity_pos.y + corner.y*entity_rect.height);
-    //     sf::Vector2f corner_new_pos = corner_pos + entity_speed;
-    //     sf::Vector2i tile_pos = getTilePos(corner_pos);
-    //     sf::Vector2i new_tile_pos = getTilePos(corner_pos + entity.getSpeed());
-        // sf::Vector2i number_of_new_tiles = new_tile_pos - tile_pos;
-
-        // Tentative of more complex collision handling
-
-        // sf::Vector2f corner_real_new_pos;
-        // // Go through every pixel in the way and check if there's an obstacle
-        // for (sf::Vector2f corner_middle_pos = corner_pos; corner_middle_pos.x <= corner_new_pos.x && corner_middle_pos.y <= corner_new_pos.y; corner_middle_pos += direction){
-        //     sf::Vector2i middle_tile_pos = getTilePos(corner_middle_pos);
-        //     LevelTile tile_value = level_content[middle_tile_pos.y][middle_tile_pos.x];
-        //     if (tile_value != LevelTile::air){
-        //         sf::Vector2i diff_tile_pos = middle_tile_pos - getTilePos(corner_middle_pos - direction);
-        //         if (diff_tile_pos.x != 0){
-                    
-        //         }
-        //         if (diff_tile_pos.y !=0){
-
-        //         }
-        //         else if (diff_tile_pos == sf::Vector2i(0,0))
-        //             std::cout << "Error, the diff tile should not be zero" << std::endl;
-        //     }
-        // }
-    // }
-
-
-
-    // Change the character position according to these values
-
-    // return (left_level_value == -1) && (right_level_value == -1);
 }
 
 sf::Vector2i Engine::getTilePos(const sf::Vector2f pos) const{
