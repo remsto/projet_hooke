@@ -42,6 +42,8 @@ class Entity : public sf::Drawable{
         void setVerticalSpeed(float new_vertical_speed);
         void resetVerticalSpeed();
 
+        void setMaxHorizontalSpeed(float max_horizontal_speed);
+
         sf::Vector2f getAcceleration() const;
         void setAcceleration(const sf::Vector2f new_acceleration);
         void setAcceleration(float x, float y);

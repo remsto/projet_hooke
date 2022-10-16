@@ -77,6 +77,10 @@ void Entity::resetVerticalSpeed(){
     setSpeed(getSpeed().x, 0);
 }
 
+void Entity::setMaxHorizontalSpeed(float max_horizontal_speed){
+    m_max_speed = sf::Vector2f(max_horizontal_speed, m_max_speed.y);
+}
+
 sf::Vector2f Entity::getAcceleration() const{
     return m_acceleration;
 }

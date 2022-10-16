@@ -52,6 +52,12 @@ void Engine::stickGround(Entity& entity) const{
 
 void Engine::handleEvent(sf::Event event){
 
+    // TODO : Implement run
+    // TODO : Implement jump limit
+    // TODO : Implement ground solid friction 
+    // TODO : Implement grapplin hook
+    // TODO : Implement wall solid friction
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
         m_character.setHorizontalAcceleration(-m_character.getBaseForce());
     }
@@ -63,6 +69,15 @@ void Engine::handleEvent(sf::Event event){
     else{
         m_character.resetHorizontalSpeed();
         m_character.resetHorizontalAcceleration();
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)){
+        m_character.setMaxHorizontalSpeed(20);
+        m_character.setRunning(true);
+    }
+    else{
+        m_character.setMaxHorizontalSpeed(10);
+        m_character.setRunning(false);
     }
 
     if (event.type == sf::Event::KeyPressed){
