@@ -2,13 +2,7 @@
 #include <iostream>
 #include "entity.hpp"
 
-// Update the Entity position and speed according to its acceleration and speed. 
-void Entity::updatePhysics(){
-    // if (!m_airborne){
-    //     m_speed.y = 0;
-    //     m_acceleration.y = 0;
-    // }
-    addPosition(m_speed);
+void Entity::updateSpeed(){
     m_speed += m_acceleration;
 
     if (m_speed.x > m_max_speed.x)
@@ -19,6 +13,11 @@ void Entity::updatePhysics(){
         m_speed.y = m_max_speed.y;
     else if (-m_speed.y > m_max_speed.y)
         m_speed.y = -m_max_speed.y;
+}
+
+// Update the Entity position and speed according to its acceleration and speed. 
+void Entity::updatePosition(){
+    addPosition(m_speed);
 
 }
 
@@ -153,3 +152,4 @@ bool Entity::getAirborne() const{
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(m_sprite);
 }
+

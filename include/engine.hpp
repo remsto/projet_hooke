@@ -61,6 +61,8 @@ class Engine {
         Engine();
 
         Engine(Level& level, Character& character, sf::View& view);
+
+        // ~Engine();
 };
 
 #endif // __ENGINE_HPP__

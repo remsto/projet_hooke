@@ -23,7 +23,8 @@ class Entity : public sf::Drawable{
         sf::Sprite m_sprite;
 
     public:
-        void updatePhysics();
+        void updateSpeed();
+        void updatePosition();
 
         sf::FloatRect getHitbox() const;
 

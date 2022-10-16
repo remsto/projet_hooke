@@ -42,7 +42,7 @@ Level::Level(int id){
     // Dummy content_array to make tests
     for (unsigned int i = 0; i < m_size_y; i++){
         for (unsigned int j = 0; j < m_size_x; j++){
-            m_content_array[i][j] = ((j > 1 && i < 15) || (j > 20 && j < 41)) ? LevelTile::Air : LevelTile::Stone;
+            m_content_array[i][j] = ((j > 1 && i < 15 && i!=10) || (j > 35 && j < 37 /* ||  (i == 10  && (j % 3 == 0 || j%3 == 1) */ ) ) ? LevelTile::Air : LevelTile::Stone;
         }
     }
 

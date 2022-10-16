@@ -43,6 +43,8 @@ Game::Game(){
     const unsigned int screen_width = sf::VideoMode::getDesktopMode().width;
     const unsigned int screen_height = sf::VideoMode::getDesktopMode().height;
 
+    // FIXME : Handle this memory issue
+
     m_engine = Engine(*(new Level()), *(new Character()), *(new sf::View(sf::FloatRect(0, 5*32, screen_width/2, screen_height/2))));
 
     // Window creation
@@ -50,4 +52,4 @@ Game::Game(){
     window.setFramerateLimit(60);
     window.setPosition(sf::Vector2i(screen_width/4, screen_height/4));
 
-};
+}

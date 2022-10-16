@@ -8,17 +8,15 @@
 
 void Engine::updatePhysics(){
 
-    // TODO : Bug when jumping while sticking to a wall : when the upper corner is reached while maintaining the direction toward the wall, 
-    // the character cannot move even if he should be able to
-
     // Simple gravity
     m_character.setVerticalAcceleration(1);
 
+    m_character.updateSpeed();
     handleStickCollision(m_character);
     // std::cout << "Acc" << m_character.getAcceleration().x << " " << m_character.getAcceleration().y << std::endl;
     // std::cout << "Speed" << m_character.getSpeed().x << " " << m_character.getSpeed().y << std::endl;
 
-    m_character.updatePhysics();
+    m_character.updatePosition();
     handleCollision(m_character);
     m_character.setSpritePos(m_character.getPosition());
     m_main_view.setCenter(m_character.getPosition());
@@ -92,7 +90,7 @@ void Engine::handleStickCollision(Entity& entity){
 
                 // Sets the speed to 0 only in the interesting direction
                 entity.setSpeed(entity_speed.x*(!(entity_speed.x * direction.x > 0)), entity_speed.y*(!(entity_speed.y * direction.y > 0)));
-                entity.setAcceleration(entity_acceleration.x*(!((entity_acceleration.x * direction.x) > 0)), entity_acceleration.y*(!((entity_acceleration.y * direction.y) > 0)));
+                // entity.setAcceleration(entity_acceleration.x*(!((entity_acceleration.x * direction.x) > 0)), entity_acceleration.y*(!((entity_acceleration.y * direction.y) > 0)));
                                         }
             entity.addPosition(-direction);
         }
@@ -103,9 +101,9 @@ bool Engine::checkCollision(const Entity& entity, unsigned int direction = Direc
     // Get varaibles
     sf::FloatRect entity_rect = entity.getHitbox();
     sf::Vector2f entity_pos = entity.getPosition(); // Also top left corner
-    sf::Vector2f top_right(entity_pos.x + entity_rect.width , entity_pos.y);
-    sf::Vector2f low_left(entity_pos.x, entity_pos.y + entity_rect.height );
-    sf::Vector2f low_right(entity_pos.x + entity_rect.width , entity_pos.y + entity_rect.height );
+    sf::Vector2f top_right(entity_pos.x + entity_rect.width, entity_pos.y);
+    sf::Vector2f low_left(entity_pos.x, entity_pos.y + entity_rect.height);
+    sf::Vector2f low_right(entity_pos.x + entity_rect.width, entity_pos.y + entity_rect.height);
     int tile_size = m_level.getTileSize();
     std::vector<std::vector<LevelTile>> level_content = m_level.getContentArray();
 
@@ -113,7 +111,7 @@ bool Engine::checkCollision(const Entity& entity, unsigned int direction = Direc
     LevelTile top_left_value = (direction & (Direction::Left | Direction::Top)) ? \
                                     level_content[static_cast<int>(entity_pos.y) / tile_size][static_cast<int>(entity_pos.x) / tile_size] : LevelTile::Air;
     LevelTile top_right_value = (direction & (Direction::Right | Direction::Top)) ? \
-                                    level_content[static_cast<int>(low_right.y) / tile_size][static_cast<int>(low_right.x) / tile_size] : LevelTile::Air;
+                                    level_content[static_cast<int>(top_right.y) / tile_size][static_cast<int>(top_right.x) / tile_size] : LevelTile::Air;
     LevelTile low_left_value = (direction & (Direction::Bottom | Direction::Left)) ? \
                                     level_content[static_cast<int>(low_left.y) / tile_size][static_cast<int>(low_left.x) / tile_size] : LevelTile::Air;
     LevelTile low_right_value = (direction & (Direction::Bottom | Direction::Right)) ? \
