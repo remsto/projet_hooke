@@ -10,6 +10,6 @@ Very simple platformer made with SFML.
 To build the project, simply use CMake. A C++ compiler should be installed, and (SFML)[https://www.sfml-dev.org/] as well.
 
 ## Screenshots
-![projet_hooke](https://github.com/remsto/projet_hooke/assets/66690700/79689e1d-aafb-4628-a779-e55883f215e9)
+![GIF didn't load properly](https://github.com/remsto/projet_hooke/tree/main/gif/projet_hooke.gif)
 
 
