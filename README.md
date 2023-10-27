@@ -1,5 +1,4 @@
-# projet_hooke
-Projet Hooke
+# Proet Hooke
 
 Very simple platformer, with physics implemented from scratch (rectangle collision, gravity)
 
